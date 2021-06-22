@@ -16,11 +16,25 @@
 //   reader.readAsArrayBuffer(ev.target.files[0]);
 // })
 
+
+function csvDownload(rows) {
+  let csvContent = "data:text/csv;charset=utf-8,"
+    + rows.map(e => e.join(",")).join("\n");
+  var encodedUri = encodeURI(csvContent);
+  var downloadLink = document.createElement("a");
+  downloadLink.href = encodedUri;
+  downloadLink.download = new Date().getTime() + ".csv";  //Name the file here
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+}
+
+
+///////////////////////////////////
 $("#upload").click(function () {
   $($(this).data("click")).click();
 })
 function writeFile(arrmm) {
-  var filename = new Date().getTime() + ".csv";
+  var filename = new Date().getTime() + "_.csv";
   var ws_name = "SheetJS";
   var wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(arrmm);
   XLSX.utils.book_append_sheet(wb, ws, ws_name);
@@ -39,10 +53,10 @@ function read(file) {
 
         var k = "";
         if (keyArr[d.Symbol] && keyArr[d.Symbol].ISIN_NUMBER) {
-          console.log(d, "=", keyArr[d.Symbol]);
           k = keyArr[d.Symbol].ISIN_NUMBER
         }
         return k;
+        // return _.values(d);
       })
       rev(_arrData);
     };
@@ -67,7 +81,8 @@ $("#file").change(function (ev) {
 
   readFile(Array.from(ev.target.files), [], function (data) {
     data = _.chain(data).filter(function (d) { return d != ""; }).map(function (d) { return [d]; }).uniq().value();
-    writeFile(data);
+    csvDownload(data);
+    // writeFile(data);
   })
 })
 
