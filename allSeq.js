@@ -52,8 +52,11 @@ function read(file) {
       var _arrData = jsonArr.map(function (d) {
 
         var k = "";
-        if (keyArr[d.Symbol] && keyArr[d.Symbol].ISIN_NUMBER) {
+        if (d.Symbol && keyArr[d.Symbol] && keyArr[d.Symbol].ISIN_NUMBER) {
           k = keyArr[d.Symbol].ISIN_NUMBER
+        }
+         if (d.SYMBOL && keyArr[d.SYMBOL] && keyArr[d.SYMBOL].ISIN_NUMBER) {
+          k = keyArr[d.SYMBOL].ISIN_NUMBER
         }
         return k;
         // return _.values(d);
